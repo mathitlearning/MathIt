@@ -5,23 +5,23 @@ import { supabase } from "../services/supabaseClient"
 const AuthContext = createContext()
 
 
-export function AuthProvider({children}){
+export function AuthProvider({ children }) {
 
-    const [user,setUser] = useState(null)
-    const [profile,setProfile] = useState(null)
-    const [loading,setLoading] = useState(true)
+    const [user, setUser] = useState(null)
+    const [profile, setProfile] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [needsOnboarding, setNeedsOnboarding] = useState(false)
 
-
-    async function loadUser(){
+    async function loadUser() {
 
         const {
-            data:{
+            data: {
                 session
             }
         } = await supabase.auth.getSession()
 
 
-        if(!session){
+        if (!session) {
 
             setUser(null)
             setProfile(null)
@@ -36,14 +36,24 @@ export function AuthProvider({children}){
         setUser(currentUser)
 
 
-        const {data:userProfile} = await supabase
+        const { data: userProfile } = await supabase
             .from("users")
             .select("*")
-            .eq("id",currentUser.id)
+            .eq("id", currentUser.id)
             .single()
 
 
         setProfile(userProfile ?? null)
+
+        if (!userProfile || !userProfile.display_name) {
+
+            setNeedsOnboarding(true)
+
+        } else {
+
+            setNeedsOnboarding(false)
+
+        }
 
         setLoading(false)
 
@@ -51,24 +61,24 @@ export function AuthProvider({children}){
 
 
 
-    useEffect(()=>{
+    useEffect(() => {
 
         loadUser()
 
 
         const {
-            data:{
+            data: {
                 subscription
             }
         } = supabase.auth.onAuthStateChange(
-            async (_event,session)=>{
+            async (_event, session) => {
 
 
-                if(session){
+                if (session) {
 
                     setUser(session.user)
 
-                }else{
+                } else {
 
                     setUser(null)
                     setProfile(null)
@@ -79,21 +89,22 @@ export function AuthProvider({children}){
         )
 
 
-        return ()=>{
+        return () => {
             subscription.unsubscribe()
         }
 
 
-    },[])
+    }, [])
 
 
 
-    async function logout(){
+    async function logout() {
 
         await supabase.auth.signOut()
 
         setUser(null)
         setProfile(null)
+        setNeedsOnboarding(false)
 
     }
 
@@ -106,6 +117,7 @@ export function AuthProvider({children}){
                 user,
                 profile,
                 loading,
+                needsOnboarding,
                 logout
             }}
         >
@@ -120,7 +132,7 @@ export function AuthProvider({children}){
 
 
 
-export function useAuth(){
+export function useAuth() {
 
     return useContext(AuthContext)
 

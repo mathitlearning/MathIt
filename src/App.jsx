@@ -11,6 +11,7 @@ import Login from "./pages/Login"
 
 import Layout from "./components/Layout"
 import ProtectedRoute from "./components/ProtectedRoute"
+import AuthRedirect from "./components/AuthRedirect"
 
 
 function App() {
@@ -22,9 +23,14 @@ function App() {
 
             <Routes>
 
-
                 <Route
                     path="/"
+                    element={<AuthRedirect />}
+                />
+
+
+                <Route
+                    path="/login"
                     element={<Login />}
                 />
 
