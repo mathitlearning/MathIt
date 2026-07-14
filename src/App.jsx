@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home"
 import Profile from "./pages/Profile"
 import Login from "./pages/Login"
+import Onboarding from "./pages/Onboarding"
 
 import Layout from "./components/Layout"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -28,6 +29,10 @@ function App() {
                     element={<AuthRedirect />}
                 />
 
+                <Route
+                    path="/onboarding"
+                    element={<Onboarding />}
+                />
 
                 <Route
                     path="/login"

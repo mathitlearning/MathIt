@@ -2,90 +2,203 @@ import { useState } from "react"
 import { supabase } from "../services/supabaseClient"
 import { useNavigate } from "react-router-dom"
 
+
 function Login(){
+
+    const navigate = useNavigate()
 
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
-    const navigate = useNavigate()
+    const [loading,setLoading] = useState(false)
+    const [message,setMessage] = useState("")
 
 
     async function login(){
 
-        const {data,error} =
-            await supabase.auth.signInWithPassword({
-                email,
-                password
-            })
+        setLoading(true)
+        setMessage("")
+
+
+        const {
+            error
+        } = await supabase.auth.signInWithPassword({
+
+            email,
+            password
+
+        })
 
 
         if(error){
-            alert(error.message)
+
+            setMessage(error.message)
+            setLoading(false)
             return
+
         }
 
 
-        console.log(data.user)
-        navigate("/home")
+        navigate("/")
 
     }
+
 
 
     async function signup(){
 
-        const {error} =
-            await supabase.auth.signUp({
-                email,
-                password
-            })
+        setLoading(true)
+        setMessage("")
+
+
+        const {
+            error
+        } = await supabase.auth.signUp({
+
+            email,
+            password,
+
+            options:{
+                emailRedirectTo:
+                window.location.origin
+            }
+
+        })
 
 
         if(error){
-            alert(error.message)
-            return
+
+            setMessage(error.message)
+
+        }else{
+
+            setMessage(
+                "Check your email to confirm your account."
+            )
+
         }
 
 
-        alert("Check your email")
+        setLoading(false)
+
     }
 
 
-    return(
-        <div className="view">
 
-            <div className="card">
+    async function googleLogin(){
 
-                <h2>MathIt</h2>
+        const {
+            error
+        } = await supabase.auth.signInWithOAuth({
+
+            provider:"google",
+
+            options:{
+                redirectTo:
+                window.location.origin
+            }
+
+        })
+
+
+        if(error){
+
+            setMessage(error.message)
+
+        }
+
+    }
+
+
+
+    return (
+
+        <div className="auth-page">
+
+
+            <div className="auth-card">
+
+
+                <h1>
+                    MathIt
+                </h1>
 
 
                 <input
+
                     placeholder="Email"
+
                     value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
+
+                    onChange={
+                        e=>setEmail(e.target.value)
+                    }
+
                 />
 
 
                 <input
+
                     type="password"
+
                     placeholder="Password"
+
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+
+                    onChange={
+                        e=>setPassword(e.target.value)
+                    }
+
                 />
 
 
-                <button onClick={login}>
+
+                <button
+                    onClick={login}
+                    disabled={loading}
+                >
+
                     Login
+
                 </button>
 
 
-                <button onClick={signup}>
+
+                <button
+                    onClick={signup}
+                    disabled={loading}
+                >
+
                     Sign Up
+
                 </button>
+
+
+
+                <button
+                    onClick={googleLogin}
+                >
+
+                    Continue with Google
+
+                </button>
+
+
+
+                {
+                    message &&
+                    <p>
+                        {message}
+                    </p>
+                }
 
 
             </div>
 
+
         </div>
+
     )
+
 }
 
 
