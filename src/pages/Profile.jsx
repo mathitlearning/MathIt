@@ -1,4 +1,8 @@
-function Profile(){
+import { useAuth } from "../contexts/AuthContext"
+
+function Profile() {
+
+    const { logout } = useAuth()
 
     return (
 
@@ -12,6 +16,12 @@ function Profile(){
             <p>
                 User settings will go here.
             </p>
+
+            <button
+                onClick={logout}
+            >
+                Logout
+            </button>
 
 
         </div>

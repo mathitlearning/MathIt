@@ -10,10 +10,10 @@ import Profile from "./pages/Profile"
 import Login from "./pages/Login"
 
 import Layout from "./components/Layout"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 
-
-function App(){
+function App() {
 
     return (
 
@@ -25,25 +25,27 @@ function App(){
 
                 <Route
                     path="/"
-                    element={<Login/>}
+                    element={<Login />}
                 />
 
 
                 <Route
                     element={
-                        <Layout/>
+                        <ProtectedRoute>
+                            <Layout />
+                        </ProtectedRoute>
                     }
                 >
 
                     <Route
                         path="/home"
-                        element={<Home/>}
+                        element={<Home />}
                     />
 
 
                     <Route
                         path="/profile"
-                        element={<Profile/>}
+                        element={<Profile />}
                     />
 
 
