@@ -1,19 +1,20 @@
 import { useState } from "react"
 import { supabase } from "../services/supabaseClient"
 import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 
-function Login(){
+function Login() {
 
     const navigate = useNavigate()
 
-    const [email,setEmail] = useState("")
-    const [password,setPassword] = useState("")
-    const [loading,setLoading] = useState(false)
-    const [message,setMessage] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [message, setMessage] = useState("")
 
 
-    async function login(){
+    async function login() {
 
         setLoading(true)
         setMessage("")
@@ -29,7 +30,7 @@ function Login(){
         })
 
 
-        if(error){
+        if (error) {
 
             setMessage(error.message)
             setLoading(false)
@@ -44,7 +45,7 @@ function Login(){
 
 
 
-    async function signup(){
+    async function signup() {
 
         setLoading(true)
         setMessage("")
@@ -57,19 +58,19 @@ function Login(){
             email,
             password,
 
-            options:{
+            options: {
                 emailRedirectTo:
-                window.location.origin
+                    window.location.origin
             }
 
         })
 
 
-        if(error){
+        if (error) {
 
             setMessage(error.message)
 
-        }else{
+        } else {
 
             setMessage(
                 "Check your email to confirm your account."
@@ -84,23 +85,23 @@ function Login(){
 
 
 
-    async function googleLogin(){
+    async function googleLogin() {
 
         const {
             error
         } = await supabase.auth.signInWithOAuth({
 
-            provider:"google",
+            provider: "google",
 
-            options:{
+            options: {
                 redirectTo:
-                window.location.origin
+                    window.location.origin
             }
 
         })
 
 
-        if(error){
+        if (error) {
 
             setMessage(error.message)
 
@@ -130,7 +131,7 @@ function Login(){
                     value={email}
 
                     onChange={
-                        e=>setEmail(e.target.value)
+                        e => setEmail(e.target.value)
                     }
 
                 />
@@ -145,7 +146,7 @@ function Login(){
                     value={password}
 
                     onChange={
-                        e=>setPassword(e.target.value)
+                        e => setPassword(e.target.value)
                     }
 
                 />
@@ -182,7 +183,11 @@ function Login(){
 
                 </button>
 
+                <Link to="/forgot-password">
 
+                    Forgot Password?
+
+                </Link>
 
                 {
                     message &&

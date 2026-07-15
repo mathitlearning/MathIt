@@ -1,4 +1,5 @@
 import { useAuth } from "../contexts/AuthContext"
+import { Link } from "react-router-dom"
 
 function Profile() {
 
@@ -22,6 +23,12 @@ function Profile() {
             >
                 Logout
             </button>
+
+            <Link to="/settings">
+
+                Settings
+
+            </Link>
 
 
         </div>
