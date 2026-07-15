@@ -10,7 +10,7 @@ import {
     validatePassword
 } from "../../utils/passwordValidation"
 
-import PasswordRequirements from "../auth/PasswordRequirements"
+import PasswordRequirements from "../Auth/PasswordRequirements"
 
 
 function ChangePassword() {
