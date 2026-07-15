@@ -2,6 +2,10 @@ import { useState } from "react"
 import { supabase } from "../services/supabaseClient"
 import { useNavigate } from "react-router-dom"
 
+import {
+    validatePassword
+} from "../utils/passwordValidation"
+
 function ResetPassword() {
 
     const navigate = useNavigate()
@@ -23,6 +27,20 @@ function ResetPassword() {
         }
 
         setLoading(true)
+
+        const validation =
+            validatePassword(password)
+
+
+        if (!validation.valid) {
+
+            setError(
+                validation.errors[0]
+            )
+
+            return
+
+        }
 
         const { error } =
             await supabase.auth.updateUser({
@@ -58,14 +76,14 @@ function ResetPassword() {
                     type="password"
                     placeholder="New Password"
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <input
                     type="password"
                     placeholder="Confirm Password"
                     value={confirm}
-                    onChange={(e)=>setConfirm(e.target.value)}
+                    onChange={(e) => setConfirm(e.target.value)}
                 />
 
                 <button disabled={loading}>

@@ -50,6 +50,19 @@ function Login() {
         setLoading(true)
         setMessage("")
 
+        const validation =
+            validatePassword(password)
+
+
+        if (!validation.valid) {
+
+            setError(
+                validation.errors[0]
+            )
+
+            return
+
+        }
 
         const {
             error

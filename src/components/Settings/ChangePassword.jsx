@@ -6,8 +6,14 @@ import {
     supabase
 } from "../../services/supabaseClient"
 
+import {
+    validatePassword
+} from "../../utils/passwordValidation"
 
-function ChangePassword(){
+import PasswordRequirements from "../auth/PasswordRequirements"
+
+
+function ChangePassword() {
 
 
     const [
@@ -35,28 +41,27 @@ function ChangePassword(){
 
 
 
-    async function handleSubmit(e){
+    async function handleSubmit(e) {
 
         e.preventDefault()
 
 
         setMessage("")
 
+        const validation = validatePassword(password)
 
 
-        if(password.length < 8){
+        if (!validation.valid) {
 
             setMessage(
-                "Password must be at least 8 characters."
+                validation.errors[0]
             )
 
             return
 
         }
 
-
-
-        if(password !== confirmPassword){
+        if (password !== confirmPassword) {
 
             setMessage(
                 "Passwords do not match."
@@ -75,11 +80,11 @@ function ChangePassword(){
         const {
             error
         } =
-        await supabase.auth.updateUser({
+            await supabase.auth.updateUser({
 
-            password
+                password
 
-        })
+            })
 
 
 
@@ -87,7 +92,7 @@ function ChangePassword(){
 
 
 
-        if(error){
+        if (error) {
 
             setMessage(
                 error.message
@@ -118,6 +123,9 @@ function ChangePassword(){
             onSubmit={handleSubmit}
         >
 
+            <PasswordRequirements
+                password={password}
+            />
 
             <input
 
@@ -128,7 +136,7 @@ function ChangePassword(){
                 value={password}
 
                 onChange={
-                    e=>setPassword(e.target.value)
+                    e => setPassword(e.target.value)
                 }
 
             />
@@ -144,11 +152,10 @@ function ChangePassword(){
                 value={confirmPassword}
 
                 onChange={
-                    e=>setConfirmPassword(e.target.value)
+                    e => setConfirmPassword(e.target.value)
                 }
 
             />
-
 
 
             <button
@@ -157,10 +164,10 @@ function ChangePassword(){
 
                 {
                     loading
-                    ?
-                    "Updating..."
-                    :
-                    "Change Password"
+                        ?
+                        "Updating..."
+                        :
+                        "Change Password"
                 }
 
             </button>
